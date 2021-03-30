@@ -19,21 +19,26 @@ def echo(update, context):
 def main():
     dotenv.load_dotenv('.env')
     telegram_token = os.environ['TELEGRAM_TOKEN']
-
     # Проверка бота
     # print(bot.get_me())
+    # Настройки
     updater = Updater(token=telegram_token, use_context=True)
     dispatcher = updater.dispatcher
+    # Хендлеры
+    start_handeler = CommandHandler('start', start)
+    echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
 
     logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',
                         level=logging.INFO)
-
-    start_handeler = CommandHandler('start', start)
+    # Добавляем хендлеры в диспетчер
     dispatcher.add_handler(start_handeler)
+    dispatcher.add_handler(echo_handler)
+
+    # Начинаем поиск обновлений
     updater.start_polling()
 
-    echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
-    dispatcher.add_handler(echo_handler)
+    # Останавливаем бота, если были нажаты Ctrl + C
+    updater.idle()
 
 
 if __name__ == '__main__':
