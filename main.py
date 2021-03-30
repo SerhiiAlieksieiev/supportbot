@@ -6,9 +6,11 @@ import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from google.cloud import dialogflow, storage
 
-def textMessage(update, context):
+
+def text_message(update, context):
+    project_id = context.bot_data['project_id']
+
     text = update.message.text
-    project_id = os.environ['GCP_PROJECT_ID']
     session_id = 123456789
     session_client = dialogflow.SessionsClient()
     session = session_client.session_path(project_id, session_id)
@@ -34,13 +36,14 @@ def main():
     
     updater = Updater(token=telegram_token, use_context=True)
     dispatcher = updater.dispatcher
+    dispatcher.bot_data['project_id'] = os.environ['GCP_PROJECT_ID']
 
     start_handeler = CommandHandler('start', start)
-    text_message_handler = MessageHandler(Filters.text, textMessage)
+    text_message_handler = MessageHandler(Filters.text, text_message)
 
     logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',
                         level=logging.INFO)
-
+    
     dispatcher.add_handler(start_handeler)
     dispatcher.add_handler(text_message_handler)
 
