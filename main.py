@@ -4,7 +4,7 @@ import logging
 
 import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from google.cloud import dialogflow, storage
+from google.cloud import dialogflow
 
 
 def text_message(update, context):
