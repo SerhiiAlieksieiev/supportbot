@@ -10,7 +10,7 @@ def text_message(update, context):
     project_id = context.bot_data['project_id']
 
     text = update.message.text
-    session_id = 123456789
+    session_id = update.message.chat_id
     session_client = dialogflow.SessionsClient()
     session = session_client.session_path(project_id, session_id)
     text_input = dialogflow.TextInput(text=text, language_code="ru")
