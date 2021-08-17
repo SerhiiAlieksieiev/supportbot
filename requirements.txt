@@ -1,2 +1,4 @@
 requests==2.25.1
 python-telegram-bot==13.3
+google-cloud-dialogflow==2.7.1
+vk-api==11.9.4
