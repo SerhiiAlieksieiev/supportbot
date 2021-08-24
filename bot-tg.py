@@ -4,7 +4,9 @@ import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from google.cloud import dialogflow
+from logs_handler import LogsHandler
 
+logger = logging.getLogger('telegram_logger')
 
 def text_message(update, context):
     project_id = context.bot_data['project_id']
@@ -28,27 +30,40 @@ def start(update, context):
     context.bot.send_message(
         chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
 
+def log_error(bot, update, error):
+    logger.warning('Update "%s" caused error "%s"', update, error)
+
+
 
 def main():
     dotenv.load_dotenv('.env')
     telegram_token = os.environ['TELEGRAM_TOKEN']
+    monitoring_telegram_token = os.environ['TELEGRAM_TOKEN_MONITORING']
+    monitoring_chat_id = os.environ['CHAT_ID_MONITORING']
     
-    updater = Updater(token=telegram_token, use_context=True)
-    dispatcher = updater.dispatcher
-    dispatcher.bot_data['project_id'] = os.environ['GCP_PROJECT_ID']
+    logger.setLevel(logging.INFO)
+    logger.addHandler(LogsHandler(monitoring_telegram_token, monitoring_chat_id))
+    logger.info("TelegramSupportBot запущен")
 
-    start_handeler = CommandHandler('start', start)
-    text_message_handler = MessageHandler(Filters.text, text_message)
+    try:
+        updater = Updater(token=telegram_token, use_context=True)
+        dispatcher = updater.dispatcher
+        dispatcher.bot_data['project_id'] = os.environ['GCP_PROJECT_ID']
 
-    logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',
-                        level=logging.INFO)
-    
-    dispatcher.add_handler(start_handeler)
-    dispatcher.add_handler(text_message_handler)
+        start_handeler = CommandHandler('start', start)
+        text_message_handler = MessageHandler(Filters.text, text_message)
 
-    updater.start_polling()
+        logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',
+                            level=logging.INFO)
+        
+        dispatcher.add_handler(start_handeler)
+        dispatcher.add_handler(text_message_handler)
 
-    updater.idle()
+        updater.start_polling()
+        updater.idle()
+
+    except Exception:
+        logger.exception('Возникла ошибка в TelegramSupportBot')
 
 
 if __name__ == '__main__':
