@@ -17,23 +17,21 @@ def text_message(update, context):
     session = session_client.session_path(project_id, session_id)
     text_input = dialogflow.TextInput(text=text, language_code="ru")
     query_input = dialogflow.QueryInput(text=text_input)
-    response = session_client.detect_intent(
-        request={"session": session, "query_input": query_input}
-    )
-    response = response.query_result.fulfillment_text
-    
-    context.bot.send_message(
-        chat_id=update.effective_chat.id, text=response)
+    try:
+        response = session_client.detect_intent(
+            request={"session": session, "query_input": query_input}
+        )
+        response = response.query_result.fulfillment_text
+        
+        context.bot.send_message(
+            chat_id=update.effective_chat.id, text=response)
+    except:
+        logger.exception("Проблема при получении и отправке сообщений")
 
 
 def start(update, context):
     context.bot.send_message(
         chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
-
-def log_error(bot, update, error):
-    logger.warning('Update "%s" caused error "%s"', update, error)
-
-
 
 def main():
     dotenv.load_dotenv('.env')
