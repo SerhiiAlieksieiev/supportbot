@@ -14,10 +14,10 @@ def detect_intent_texts(project_id, session_id, text, language_code):
 
     session = session_client.session_path(project_id, session_id)
 
-    text_input = dialogflow.types.TextInput(
+    text_input = dialogflow.TextInput(
                 text=text, language_code=language_code)
 
-    query_input = dialogflow.types.QueryInput(text=text_input)
+    query_input = dialogflow.QueryInput(text=text_input)
     
     response = session_client.detect_intent(
             session=session, query_input=query_input)
