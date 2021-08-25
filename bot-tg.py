@@ -1,5 +1,5 @@
 import os
-import dotenv
+#import dotenv
 import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -34,7 +34,7 @@ def start(update, context):
         chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
 
 def main():
-    dotenv.load_dotenv('.env')
+    #dotenv.load_dotenv('.env')
     telegram_token = os.environ['TELEGRAM_TOKEN']
     monitoring_telegram_token = os.environ['TELEGRAM_TOKEN_MONITORING']
     monitoring_chat_id = os.environ['CHAT_ID_MONITORING']

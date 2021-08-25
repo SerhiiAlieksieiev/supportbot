@@ -1,9 +1,9 @@
 import os
 from random import randint
-import dialogflow
 import logging
 import vk_api as vk
 
+from google.cloud import dialogflow
 from vk_api.longpoll import VkLongPoll, VkEventType
 from logs_handler import LogsHandler
 
@@ -41,8 +41,8 @@ def answer(event, vk_api):
       logger.exception('Возникла ошибка в VkSupportBot')
 
 def main():
-    dotenv.load_dotenv('.env')
-    
+    #dotenv.load_dotenv('.env')
+
     vk_token = os.environ['VK_TOKEN']
     vk_session = vk.VkApi(token=vk_token)
     vk_api = vk_session.get_api()
