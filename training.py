@@ -39,8 +39,8 @@ def main():
     dotenv.load_dotenv(".env")
     project_id = os.environ["GCP_PROJECT_ID"]
 
-    with open("questions.json", "r", encoding="utf8") as my_file:
-        questions = json.load(my_file)
+    with open("questions.json", "r", encoding="utf8") as training:
+        questions = json.load(training)
 
     for title, intent in questions.items():
         create_intent(project_id, title,
