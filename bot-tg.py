@@ -61,7 +61,7 @@ def main():
         updater.idle()
 
     except Exception:
-        logger.exception('Возникла ошибка в TelegramSupportBot')
+        logger.exception()
 
 
 if __name__ == '__main__':

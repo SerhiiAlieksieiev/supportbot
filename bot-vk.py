@@ -57,14 +57,14 @@ def main():
     try:
         longpoll = VkLongPoll(vk_session)
     except Exception:
-        logger.exception('Возникла ошибка в VkSupportBot')
+        logger.exception()
 
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
             try:
                 answer(event, vk_api)
             except Exception:
-                logger.exception('Возникла ошибка в VkSupportBot')
+                logger.exception()
   
 
 if __name__ == "__main__":
