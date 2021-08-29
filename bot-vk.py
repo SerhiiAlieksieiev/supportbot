@@ -55,10 +55,8 @@ def main():
         monitoring_telegram_token, monitoring_chat_id))
     logger.info("VkSupportBot запущен")
 
-    try:
-        longpoll = VkLongPoll(vk_session)
-    except Exception:
-        logger.exception()
+    longpoll = VkLongPoll(vk_session)
+    logger.exception()
 
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
