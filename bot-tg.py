@@ -1,5 +1,5 @@
 import os
-#import dotenv
+import dotenv
 import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -12,7 +12,8 @@ def text_message(update, context):
     project_id = context.bot_data['project_id']
 
     text = update.message.text
-    session_id = update.message.chat_id
+    user_id = update.message.chat_id
+    session_id = "tg-id" + str(user_id)
     session_client = dialogflow.SessionsClient()
     session = session_client.session_path(project_id, session_id)
     text_input = dialogflow.TextInput(text=text, language_code="ru")
@@ -25,8 +26,8 @@ def text_message(update, context):
         
         context.bot.send_message(
             chat_id=update.effective_chat.id, text=response)
-    except:
-        logger.exception("Проблема при получении и отправке сообщений")
+    except Exception:
+        logger.exception()
 
 
 def start(update, context):
@@ -34,7 +35,7 @@ def start(update, context):
         chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
 
 def main():
-    #dotenv.load_dotenv('.env')
+    dotenv.load_dotenv('.env')
     telegram_token = os.environ['TELEGRAM_TOKEN']
     monitoring_telegram_token = os.environ['TELEGRAM_TOKEN_MONITORING']
     monitoring_chat_id = os.environ['CHAT_ID_MONITORING']
