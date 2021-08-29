@@ -31,8 +31,9 @@ def detect_intent_texts(project_id, session_id, text, language_code):
 
 def answer(event, vk_api):
     project_id = os.environ['GCP_PROJECT_ID']
+    session_id = "vk-id" + str(event.user_id)
     dialogflow_response = detect_intent_texts(
-        project_id, event.user_id, event.text, "ru")
+        project_id, session_id, event.text, "ru")
     if dialogflow_response:
         vk_api.messages.send(
             user_id=event.user_id,
@@ -42,8 +43,6 @@ def answer(event, vk_api):
 
 
 def main():
-    # dotenv.load_dotenv('.env')
-
     vk_token = os.environ['VK_TOKEN']
     vk_session = vk.VkApi(token=vk_token)
     vk_api = vk_session.get_api()
