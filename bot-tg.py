@@ -1,5 +1,4 @@
 import os
-import dotenv
 import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -42,10 +41,11 @@ def start(update, context):
 
 
 def main():
-    dotenv.load_dotenv('.env')
     telegram_token = os.environ['TELEGRAM_TOKEN']
     monitoring_telegram_token = os.environ['TELEGRAM_TOKEN_MONITORING']
     monitoring_chat_id = os.environ['CHAT_ID_MONITORING']
+    heroku_app_name = os.environ['HEROKU_APP_NAME']
+    PORT = int(os.environ.get('PORT', '8443'))
 
     logger.setLevel(logging.INFO)
     logger.addHandler(LogsHandler(
@@ -65,8 +65,15 @@ def main():
     dispatcher.add_handler(start_handeler)
     dispatcher.add_handler(text_message_handler)
 
-    updater.start_polling()
-    updater.idle()
+    # updater.start_polling()
+    # updater.idle()
+
+    updater.start_webhook(
+        listen="0.0.0.0",
+        port=PORT,
+        url_path=telegram_token,
+        webhook_url=f"https://{heroku_app_name}.herokuapp.com/{telegram_token}"
+    )
 
 
 if __name__ == '__main__':
